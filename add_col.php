@@ -16,7 +16,7 @@
 	}
 
 	if ($is_valid) {
-		$myquery = 'DESCRIBE ' . $_GET['tb'];
+		$myquery = 'DESCRIBE `' . $_GET['tb'] . '`';
 		$stm = $newdb->query($myquery);
 		$result = $stm->fetchAll(PDO::FETCH_ASSOC);
 		#Создаем массив с существующими именами полей
