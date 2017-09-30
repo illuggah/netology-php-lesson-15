@@ -37,7 +37,7 @@
 	</nav>
 	<div class="container">
 		<h2>Hello, World! Я - редактор таблиц MySQL. Со мной Вы сможете:</h2><br>
-		<a class="btn btn-primary" href="table_list.php">Просмотреть уже имеющиеся таблицы</a><br><br>
+		<a class="btn btn-primary" href="table_list.php">Просмотреть / отредактировать уже имеющиеся таблицы</a><br><br>
 		<a class="btn btn-primary" href="create_step_one.php">Создать новую таблицу</a>
 	</div>
 </body>

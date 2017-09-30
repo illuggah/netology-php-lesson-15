@@ -1,10 +1,32 @@
-<?php 
+<?php
+
+	require_once 'db_connect.php';
 
 	if (empty($_POST['table_name'])) {
 		header('Location: create_step_one.php?m=m1');
 		die;
 	} elseif (empty($_POST['col_count'])) {
 		header('Location: create_step_one.php?m=m2');
+		die;
+	}
+
+	$table_query = 'SHOW TABLES';
+	$tb_stm = $newdb->query($table_query);
+	$tb_result = $tb_stm->fetchAll(PDO::FETCH_ASSOC);
+
+	$exist = false;
+
+	foreach ($tb_result as $item) {
+		foreach ($item as $table_name) {
+			#$list[] = $table_name;
+			if ($_POST['table_name'] === $table_name) {
+				$exist = true;
+			}
+		}
+	}
+
+	if ($exist) {
+		header('Location: create_step_one.php?m=m4');
 		die;
 	}
 
@@ -41,6 +63,10 @@
 			</div>
 		</div>
 	</nav>
+
+	
+
+
 	<div class="container">
 		<div class="row vertical-offset-100">
 			<div class="col-md-6 col-md-offset-3">
@@ -51,7 +77,7 @@
 					<div class="panel-body">
 	                    <form method="POST" action="create_handler.php?n=<?=$_POST['table_name']?>&c=<?=$_POST['col_count']?>">
 							<table class="table">
-								<tr><th>Имя столбца</th><th>Тип</th></tr>
+								<tr><th>Имя столбца</th><th>Тип</th><th>NULL</th></tr>
 								<tr><td>`id`</td><td>INT (Primary Key, Auto Incrementable)</td></tr>
 								<?php
 									$type_options = '<option value="INT">Простое число</option>
@@ -59,9 +85,15 @@
 													<option value="TEXT (1024)">Текст</option>
 													<option value="DATETIME">Дата</option>
 													</select>';
+									$null_options = '<option value="YES">YES</option>
+													<option value="NO">NO</option>
+													</select>';
+
 									while ($i < $_POST['col_count']) {
 										$i++;
-										echo '<tr><td><input type="text" maxlength="20" name="col_name_'. $i .'"></td><td><select name="col_type_'. $i .'">'. $type_options .'</td></tr>';
+										echo '<tr><td><input type="text" maxlength="20" name="col_name_'. $i .'"></td>
+												<td><select name="col_type_'. $i .'">'. $type_options .'</td>
+												<td><select name="col_null_' . $i .'">'. $null_options .'</td></tr>';
 									}
 								?>
 							</table>

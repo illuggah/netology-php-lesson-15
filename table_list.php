@@ -46,20 +46,22 @@
 		</div>
 	</nav>
 	<div class="container">
-		<h2>Список таблиц</h2>
-		<table class="table">
 			<?php
 				if (isset($list)) {
-					echo "<tr><th>Название</th><th>Инфо</th><th>Редактировать</th><th>Удалить</th></tr>";
+					echo '<h2>Список таблиц</h2>' . PHP_EOL;
+					echo "<table class=\"table table-hover\"><tr><th>Имя</th><th>Инфо</th><th>Редактировать</th><th>Удалить</th></tr>";
 					foreach ($list as $list_item) {
 						echo '<tr><td>'. $list_item .'</td>
-						<td><a href="table_info.php?db='. $list_item .'"><i class="fa fa-info-circle"></i></a></td>
-						<td><a href="edit.php?db='. $list_item .'"><i class="fa fa-pencil-square-o"></i></a></td>
-						<td><a href="drop.php?db='. $list_item .'"><i class="fa fa-trash"></i></a></td>';
+						<td><a class="btn btn-info" href="table_info.php?tb='. $list_item .'"><i class="fa fa-info-circle"></i></a></td>
+						<td><a class="btn btn-warning" href="edit.php?tb='. $list_item .'"><i class="fa fa-pencil-square-o"></i></a></td>
+						<td><a class="btn btn-danger" href="drop.php?tb='. $list_item .'"><i class="fa fa-trash"></i></a></td>';
 					}
-				} 
+					echo '</table>';
+				} else {
+					echo '<h2>Список таблиц пуст</h2>' . PHP_EOL . '<h2><small>Вы можете</small></h2>' . PHP_EOL;
+					echo '<a href="create_step_one.php" class="btn btn-primary">Создать таблицу</a>';
+				}
 			?>		
-		</table>
 	</div>
 </body>
 </html>

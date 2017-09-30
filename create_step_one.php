@@ -6,6 +6,8 @@
 		$message = 'Введите количество полей!';
 	} elseif ($_GET['m'] === 'm3') {
 		$message = 'Заполните названия всех полей!';
+	} elseif ($_GET['m'] === 'm4') {
+		$message = 'Таблица с данным именем уже существует!';
 	} else {
 		$message = 'Создать новую таблицу - шаг 1';
 	}
@@ -54,11 +56,13 @@
 	                    <form method="POST" action="create_step_two.php">
 	                        <fieldset>
 	                            <div class="form-group">
-	                                <input class="form-control" placeholder="Имя таблицы" name="table_name" maxlength="20" type="text">
+	                                <input class="form-control" placeholder="Имя таблицы*" name="table_name" maxlength="20" type="text">
 	                            </div>
 	                            <div class="form-group">
-	                                <input class="form-control" placeholder="Кол-во столбцов" name="col_count" min="1" max="16" type="number">
+	                                <input class="form-control" placeholder="Кол-во полей**" name="col_count" min="1" max="16" type="number">
 	                            </div>
+	                            <p>*Название таблицы может содержать латинские символы и числа</p>
+	                            <p>**Поле `id` будет добавлено автоматически</p>
 	                            <input class="btn btn-success btn-block" type="submit" value="Продолжить &raquo">
 	                        </fieldset>
 	                    </form>

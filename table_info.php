@@ -2,6 +2,8 @@
 
 	require_once 'db_connect.php';
 
+#######	Проверка запроса
+
 	$table_query = 'SHOW TABLES';
 	$tb_stm = $newdb->query($table_query);
 	$tb_result = $tb_stm->fetchAll(PDO::FETCH_ASSOC);
@@ -9,14 +11,14 @@
 	foreach ($tb_result as $item) {
 		foreach ($item as $table_name) {
 			#$list[] = $table_name;
-			if ($_GET['db'] === $table_name) {
+			if ($_GET['tb'] === $table_name) {
 				$is_valid = true;
 			}
 		}
 	}
 
 	if ($is_valid) {
-		$myquery = 'DESCRIBE ' . $_GET['db'];
+		$myquery = 'DESCRIBE `' . $_GET['tb'] . '`';
 		$stm = $newdb->query($myquery);
 		$result = $stm->fetchAll(PDO::FETCH_ASSOC);
 	} else {
@@ -59,8 +61,8 @@
 		</div>
 	</nav>
 	<div class="container">
-		<h2>Информация о таблице '<?=$_GET['db']?>'</h2>
-		<table class="table">
+		<h2>Информация о таблице '<?=$_GET['tb']?>'</h2>
+		<table class="table table-hover">
 			<tr><th>Field</th><th>Type</th><th>Null</th><th>Key</th><th>Default</th><th>Extra</th></tr>
 			<?php 
 				foreach ($result as $column) {
@@ -72,7 +74,7 @@
 							<td>'.$column['Extra'].'</td></tr>';
 				}
 			?>
-
+		<tr><td><a class="btn btn-warning btn-block" href="edit.php?tb=<?=$_GET['tb']?>">Редактировать таблицу</a></td></tr>
 		</table>
 	</div>
 </body>

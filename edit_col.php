@@ -18,9 +18,25 @@
 	}
 
 	if ($is_valid) {
-		$myquery = 'DESCRIBE `' . $_GET['tb'] . '`';
+		$myquery = 'DESCRIBE ' . $_GET['tb'];
 		$stm = $newdb->query($myquery);
 		$result = $stm->fetchAll(PDO::FETCH_ASSOC);
+		#Создаем массив с существующими именами полей
+		foreach ($result as $column) {
+			$columns_exist[] = $column['Field'];
+		}
+		#Сравниваем имена существующих полей с именем запроса и устанавливаем флаг
+		$not_exist = TRUE;
+		foreach ($columns_exist as $ex_col_name) {
+			if ($_GET['col'] === $ex_col_name) {
+				$not_exist = FALSE;
+			}
+		}
+		#Если флаг установлен - делаем редирект с сообщением
+		if ($not_exist) {
+			header('Location: edit.php?m=not_exist&tb='. $_GET['tb']);
+			die;
+		}
 	} else {
 		header("HTTP/1.0 400 Bad Request");
 		echo '<h1 style="text-align: center; font-size: 40pt;">400</h1><h1 style="text-align: center;">Неверный запрос</h1>';
@@ -38,8 +54,6 @@
 		$message = 'Поле не существует';
 	} elseif ($_GET['m'] === 'add_succ') {
 		$message = 'Поле добавлено';
-	} elseif ($_GET['m'] === 'edit_succ') {
-		$message = 'Поле отредактировано';
 	} else {
 		$message = '';
 	}
@@ -66,7 +80,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a href="index.php" class="navbar-brand">Simple table editor | Edit table</a>
+				<a href="index.php" class="navbar-brand">Simple table editor | Edit column</a>
 
 			</div>
 			<div class="navbar-collapse navbar-top collapse">
@@ -78,28 +92,15 @@
 		</div>
 	</nav>
 	<div class="container">
-		<h2>Редактирование таблицы '<?=$_GET['tb']?>'</h2>
+		<h2>Редактирование поля '<?=$_GET['col']?>' таблицы '<?=$_GET['tb']?>'</h2>
 		<div class="messages" style="height: 20px;">
 			<span id="msg"><?=$message?></span>
 		</div>
 		<table class="table table-hover">
 			<tr><th>Field</th><th>Type</th><th>Null</th><th>Key</th><th>Default</th><th>Extra</th><th>Edit</th><th>Delete</th></tr>
-			<?php 
-				foreach ($result as $column) {
-					echo   '<tr><td>'.$column['Field'].'</td>
-							<td>'.$column['Type'].'</td>
-							<td>'.$column['Null'].'</td>
-							<td>'.$column['Key'].'</td>
-							<td>'.$column['Default'].'</td>
-							<td>'.$column['Extra'].'</td>
-							<td><a class="btn btn-warning" href="edit_col.php?tb='. $_GET['tb'] .'&col='. $column['Field'] .'"><i class="fa fa-pencil-square-o"></i></a></td>
-							<td><a class="btn btn-danger" href="delete_col.php?tb='. $_GET['tb'] .'&col='. $column['Field'] .'"><i class="fa fa-trash"></i></a></td>
-							</tr>';
-				}
-			?>
-			<form method="post" action="add_col.php?tb=<?=$_GET['tb']?>">
+			<form method="post" action="edit_col_handler.php?tb=<?=$_GET['tb']?>&col=<?=$_GET['col']?>">
 				<tr>
-				<td><input name="col_name" type="text" maxlength="20"></td>
+				<td><input name="col_name" type="text" maxlength="20" value="<?=$_GET['col']?>"></td>
 				<td>
 					<select name="col_type">
 						<option value="INT">Простое число</option>
@@ -118,7 +119,7 @@
 				<td>---</td>
 				<td>---</td>
 				</tr>
-				<tr><td><button class="btn btn-block btn-success" type="submit">Добавить поле</button></td></tr>
+				<tr><td><button class="btn btn-block btn-success" type="submit">Сохранить изменения</button></td><td><a href="edit.php?tb=<?=$_GET['tb']?>" class="btn btn-block btn-warning">Отменить</a></td></tr>
 			</form>
 		</table>
 	</div>

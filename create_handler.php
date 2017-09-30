@@ -11,7 +11,13 @@
 			die;
 		}
 
-		$create_array[] = '`' . $_POST["col_name_$i"] . '` ' . $_POST["col_type_$i"] . ', ';
+		if ($_POST["col_null_$i"] === 'NO') {
+			$null_option = 'NOT NULL';
+		} else {
+			$null_option = 'NULL';
+		}
+
+		$create_array[] = '`' . $_POST["col_name_$i"] . '` ' . $_POST["col_type_$i"] . ' ' . $null_option . ', ';
 	}
 
 	$create_query = 'CREATE TABLE IF NOT EXISTS `' . $_GET['n'] . '` (`id` INT NOT NULL AUTO_INCREMENT, ';
